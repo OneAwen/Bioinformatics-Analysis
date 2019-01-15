@@ -1,0 +1,23 @@
+rm (list=ls())
+
+library(cgdsr)
+library(DT)#方便检索的包，基本用法DT::datatable(data) 
+mycgds <- CGDS("http://www.cbioportal.org/public-portal")
+all_TCGA_studies<-getCancerStudies(mycgds)#查看有哪些可以获取的癌症数据信息
+
+stad2014<-"stad_tcga_pub"#按照ID提取
+getCaseLists(mycgds,stad2014) #CaseLists
+getGeneticProfiles(mycgds,stad2014) #GeneticProfiles
+
+#根据case和genetic的ID号获取我所需的特定基因表达量
+my_dataset<-"stad_tcga_pub_rna_seq_v2_mrna"
+my_table<-"stad_tcga_pub_rna_seq_v2_mrna"
+BRCA1<-getProfileData(mycgds,"BRCA1",my_dataset,my_table) #获取BRCA1基因表达量
+
+data<-getProfileData(mycgds,c("BRCA1","BRCA2"),my_dataset,my_table)#获取BRCA1和BRCA2基因表达量
+clinicaldata<-getClinicalData(mycgds,my_table)#相关临床信息获取
+
+
+
+
+
