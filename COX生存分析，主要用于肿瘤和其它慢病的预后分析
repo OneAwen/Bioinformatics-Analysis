@@ -1,0 +1,18 @@
+#COX生存分析，主要用于肿瘤和其它慢病的预后分析
+library(survival)
+library(survminer)
+dat<-choose_clinicaldata[choose_clinicaldata$OS_MONTHS>0 & !is.na(choose_clinicaldata$OS_STATUS),]
+dat$OS_STATUS<-as.factor(dat$OS_STATUS)
+attach(dat)
+glimpse(dat)
+my.surv<-Surv(OS_MONTHS,OS_STATUS=="DECEASED")
+m<-coxph(my.surv~AGE+SEX+N+T+M+STAGE,data = dat)#可以针对多个变量
+summary(m)
+ggsurvplot(survfit(m,data=dat),color = "#2E9FDF",ggtheme = theme_minimal())
+
+
+beta <- coef(m)
+se <- sqrt(diag(vcov(m)))
+HR <- exp(beta)
+HRse <- HR * se
+detach(dat)
