@@ -1,0 +1,21 @@
+#1.芯片与探针的完美对接
+
+library(data.table)
+library(dplyr)
+matrix <- fread("G:/转录组数据/TWAS/GSE62254_series_matrix.csv") 
+symbol <- fread("G:/转录组数据/TWAS/GSE62254_symbol.csv")
+gene_matrix <-inner_join(y = matrix,x= symbol,by ="ID")
+gene_matrix <-filter(gene_matrix,Gene != "")
+
+Gen=c()
+for (i in seq(1:length(gene_matrix$Gene))){
+  Gen[i] <- strsplit(gene_matrix$Gene[i],split = "///")[[1]][1]
+}
+
+Gen<-as.matrix(Gen)
+new_gene_matrix<-cbind(Gen,gene_matrix[,-c(1,2)])
+colnames(new_gene_matrix)[1]<-"Gene"
+fwrite(new_gene_matrix,"G:/GSE62254_data.csv")
+#2.
+
+
